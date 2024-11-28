@@ -237,7 +237,7 @@ window.onload = function(){
    let element = document.getElementById("row0");
    console.log(getNthChild(element, 7));
    drawPixel(0, 1, "pink");
-   drawLine(6, 2, 0,8, "brown");
+   drawLine(6, 2, 0, "brown");
 }
 
 
