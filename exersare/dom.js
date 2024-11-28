@@ -1,7 +1,8 @@
-console.log("merge");
-let div = document.querySelector("div");
-div.style.backgroundColor = "red";
-let newDiv = document.createElement("p");
-newDiv.innerHTML = "Hello world";
-newDiv.style.backgorundColor = "red";
-div.appendChild(newDiv);
+function ceva(){
+    console.log(a);
+}
+function altceva(){
+    let a = 2;
+    ceva();
+}
+altceva()

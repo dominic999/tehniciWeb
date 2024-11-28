@@ -1,12 +1,9 @@
 function drawTable(nrows, ncols) {
-/* 
-   1. Generați un tabel cu 'nrows' rânduri și 'ncols' coloane 
-   și adăugați-l în div-ul cu id-ul 'container'. 
-*/
    let container = document.getElementById("container");
    let tabel = document.createElement("table");
    for (let i = 0; i < nrows; i++){
       let row = document.createElement("tr");
+      row.id = `row${i}`;
       tabel.appendChild(row);
       for (let j = 0; j < ncols; j++){
          let capsula = document.createElement("td");
@@ -19,50 +16,113 @@ function drawTable(nrows, ncols) {
 }
 
 function colorCol(column, color) {
-/*
-   2. Colorați coloana 'column' din tabla de desenat cu culoarea 'color'.
-*/
    let coloana = document.getElementsByClassName(`c${column}`);
-   let v = [];
-   for (let i = 0; i < coloana.length; i++){
-      v[i] = coloana[i]
-      v[i].computedStyleMap.c
-   }
+   let coloana_colorata = Array.from(coloana);
+   coloana_colorata.forEach(element => {
+      element.style.backgroundColor = color;
+   })
 }
 
 function colorRow(row, color) {
-/*
-   2. Colorați rândul 'row' din tabla de desenat cu culoarea 'color'.
-*/
+   let rand= document.getElementsByClassName(`r${row}`);
+   let rand_colorat = Array.from(rand);
+   rand_colorat.forEach(element => {
+      element.style.backgroundColor = color;
+   });
 }
 
-function rainbow(target) {
+function rainbow(target, size) {
    let colors = ["rgb(255, 0, 0)", "rgb(255, 154, 0)", "rgb(240, 240, 0)", "rgb(79, 220, 74)", "rgb(63, 218, 216)", "rgb(47, 201, 226)", "rgb(28, 127, 238)", "rgb(95, 21, 242)", "rgb(186, 12, 248)", "rgb(251, 7, 217)"];
-/*
-   3. Desenați un curcubeu pe verticală sau orizontală conform argumentului 'target' folosind culorile din 'colors' și funcțiile 'colorCol' și 'colorRow'.     
-*/
+   let numarCulori = colors.length;
+   let dimensiuneCuloare = Math.floor(size/numarCulori);
+   let rest = size % numarCulori;
+   let direction;
+   if (target == "rows"){
+      direction = "c";
+   }else{
+      direction = "r";
+   }
+   let counter = 0;
+   let culoare = 0;
+   let check = 0;
+
+   for(let i = 0; i < size; i++){
+      if (direction == "r"){
+         colorRow(i, colors[culoare]);
+
+      }
+      else if(direction == "c"){
+         colorCol(i, colors[culoare]);
+      }
+      counter++;
+      if(counter % dimensiuneCuloare == 0 && rest == 0){
+         culoare++;
+      }
+      else if (counter % dimensiuneCuloare == 0 && rest != 0 ){
+         if (check == 0){
+            check++;
+         }
+      }
+      else if (check == 1){
+         check = 0;
+         culoare++;
+         counter--;
+      }
+
+   }
 }
 
 function getNthChild(element, n) {
-/*
-   4. Întoarceți al n-lea element copil al unui element dat ca argument.
-*/
+   let x= element.childNodes;
+   let copii = Array.from(x);
+   return copii[n-1];
 };
 
 function drawPixel(row, col, color) {	
-/*
-   5. Colorați celula de la linia 'row' și coloana 'col' cu culoarea `color'.
-*/
+   let celula = document.getElementsByClassName(`r${row} c${col}`);
+   let cell = celula[0];
+   cell.style.backgroundColor = color;
 }
 
 function drawLine(r1, c1, r2, c2, color) {
-/*
-   6. Desenați o linie (orizontală sau verticală) de la celula aflată 
-   pe linia 'r1', coloana 'c1' la celula de pe linia 'r2', coloana 'c2'
-   folosind culoarea 'color'. 
-   Hint: verificați mai întâi că punctele (r1, c1) și (r2, c2) definesc
-   într-adevăr o linie paralelă cu una dintre axe.
-*/
+   let linieMaxima = Math.max(r1,r2);
+   let linieMinima =  Math.min(r1, r2);
+   let coloanaMaxima = (() => {
+      if(linieMaxima == r1){
+         return c1;
+      }else{
+         return c2;
+      }
+   })()
+   let coloanaMinima = c1+c2-coloanaMaxima;
+   let check = (() => {
+      if(c1 == c2){
+         return 2;
+      }
+      else if(coloanaMaxima < Math.max(c1,c2)){
+         return 1;
+      }else{
+         return 0;
+      }
+   })()
+   while(((r1 != r2) && (linieMinima < linieMaxima && linieMaxima > 0)) || coloanaMinima != coloanaMaxima){
+      console.log("rand: " + linieMaxima + " coloana: " + coloanaMaxima);
+      drawPixel(linieMaxima, coloanaMaxima, color);
+      if (r1 != r2 && linieMaxima > linieMinima && linieMaxima > 0){
+         linieMaxima--;
+      }
+      if(coloanaMaxima != coloanaMinima){
+         if (check == 1){
+            coloanaMaxima++;
+         }else{
+            coloanaMaxima--;
+         }
+      }
+   }
+
+   if(check != 2 || r1 != r2){
+      drawPixel(linieMaxima, coloanaMaxima, color);
+   }
 }
 
 function drawRect(r1, c1, r2, c2, color) {
@@ -168,9 +228,16 @@ function smear(row, col, amount) {
 
 
 window.onload = function(){
-    const rows = 3;
-    const cols = 15;	
-    drawTable(rows, cols);
+   const rows = 35;
+   const cols = 35;	
+   drawTable(rows, cols);
+   colorCol(12, "blue");
+   colorRow(34, "pink");
+   rainbow("rows", cols);
+   let element = document.getElementById("row0");
+   console.log(getNthChild(element, 7));
+   drawPixel(0, 1, "pink");
+   drawLine(6, 2, 0,8, "brown");
 }
 
 
