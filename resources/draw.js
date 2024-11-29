@@ -1,4 +1,5 @@
 function drawTable(nrows, ncols) {
+
    let container = document.getElementById("container");
    let tabel = document.createElement("table");
    for (let i = 0; i < nrows; i++){
@@ -79,6 +80,7 @@ function getNthChild(element, n) {
 };
 
 function drawPixel(row, col, color) {	
+
    let celula = document.getElementsByClassName(`r${row} c${col}`);
    let cell = celula[0];
    cell.style.backgroundColor = color;
@@ -106,7 +108,6 @@ function drawLine(r1, c1, r2, c2, color) {
       }
    })()
    while(((r1 != r2) && (linieMinima < linieMaxima && linieMaxima > 0)) || coloanaMinima != coloanaMaxima){
-      console.log("rand: " + linieMaxima + " coloana: " + coloanaMaxima);
       drawPixel(linieMaxima, coloanaMaxima, color);
       if (r1 != r2 && linieMaxima > linieMinima && linieMaxima > 0){
          linieMaxima--;
@@ -126,11 +127,13 @@ function drawLine(r1, c1, r2, c2, color) {
 }
 
 function drawRect(r1, c1, r2, c2, color) {
-/*
-   7. Desenați, folosind culoarea 'color', un dreptunghi cu colțul din 
-   stânga sus în celula de pe linia 'r1', coloana 'c1', și cu 
-   colțul din dreapta jos în celula de pe linia 'r2', coloana 'c2'.
-*/
+   while(r1 <= r2){
+      drawLine(r1, c1, r1, c2, color);
+      r1++;
+      
+   }
+
+
 }
 
 function drawPixelExt(row, col, color) {
@@ -138,6 +141,67 @@ function drawPixelExt(row, col, color) {
    8. Colorați celula de la linia 'row' și coloana 'col' cu culoarea 'color'.
    Dacă celula nu există, extindeți tabla de desenat în mod corespunzător.
 */
+   let x = document.getElementsByClassName(`r${row} c${col}`);
+   let i = 0;
+   // if(x.length == 0){
+   //    let randuri = document.getElementsByClassName("c0");
+   //    let coloane = document.getElementsByClassName("r0");
+   //    var numarRanduri = randuri.length;
+   //    var numarColoane = coloane.length;
+   // }else{
+   //    drawPixel(row,col,color);
+   //    return ;
+   // }
+   // let tabel = document.querySelector("table");
+   // let counterRanduri = row;
+   // let counterColoane = col;
+   // let check = 0;
+   // for (let i = numarRanduri - 1; i < row; i++ ){
+   //    check = 1;
+   //    let rand = document.createElement("tr");
+   //    rand.id = `row${i}`;
+   //    tabel.appendChild(rand);
+   //    for (let j = 0; j < col; j++){
+   //       let celula = document.createElement("td");
+   //       celula.classList = `r{i} c{j}`;
+   //       rand.appendChild(celula);
+   //    }
+   // }
+   // if (check == 0){
+   //    for(let j = numarColoane - 1; j < col; j++){
+   //       let celula = document.createElement("td");
+   //       celula.classList = `r{row} c{j}`;
+   //       rand.appendChild(celula);
+   //       drawPixel(row, j, color);
+   //    }     
+   // }
+   let rand = document.getElementsByClassName("r0");
+   let coloana = document.getElementsByClassName("c0");
+   let numarColoane = coloana.length;
+   let numarRanduri = rand.length;
+   let tabel = document.querySelector("table");
+   for(let i = 0; i < row; i++){ 
+      console.log(i);
+      if(i < numarRanduri){
+         let rand = document.getElementById(`row${i}`);
+         for (let j = numarColoane; j < col; j++){
+            let cel = document.createElement("td");
+            cel.classList = `r${i} c${j}`;
+            rand.appendChild(cel);
+         }
+      }
+      else{
+         let rand = document.createElement("tr");
+         rand.id = `row${i}`;
+         tabel.appendChild(rand);
+         for (let j = 0; j < col; j++){
+            let cel = document.createElement("td");
+            cel.classList = `r${i} c${j}`;
+            rand.appendChild(cel);
+         }
+      }
+   }
+   drawPixel(row-1,col-1,color);
 }
 
 function colorMixer(colorA, colorB, amount){
@@ -237,7 +301,8 @@ window.onload = function(){
    let element = document.getElementById("row0");
    console.log(getNthChild(element, 7));
    drawPixel(0, 1, "pink");
-   drawLine(6, 2, 0, "brown");
+   drawRect(0,0, 6,5, "pink");
+   drawPixelExt(40, 40, "red");
 }
 
 
